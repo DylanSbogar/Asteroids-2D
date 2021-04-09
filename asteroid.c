@@ -26,10 +26,10 @@ void init_asteroids(struct asteroid *asteroid, struct ship *ship, int w)
     asteroid->outline_b = 1;
 
     // Set the size of the asteroid.
-    asteroid->size = 50;
+    asteroid->size = 75;
 
     // Set the velocity of the asteroid.
-    asteroid->velocity = ASTEROID_MOVE_VELOCITY;
+    asteroid->velocity = (rand() % (20 + 1 - 5) + 5);
 
     // Define a random position around the arena for an asteroid to spawn at.
     asteroid->starting_pos = (rand() % (360 - 1 + 1)) + 1;
