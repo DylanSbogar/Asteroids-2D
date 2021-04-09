@@ -1,12 +1,12 @@
 #ifndef ASTEROID_H
 #define ASTEROID_H
 
-#define ASTEROID_MOVE_VELOCITY 2
+#define ASTEROID_MOVE_VELOCITY 10
 #define ASTEROID_ROTATE_VELOCITY 10
 
 #define ASTEROID_SPAWN_RADIUS 0.75
 
-#define NUM_ASTEROIDS 1
+#define NUM_ASTEROIDS 10
 
 #include <stdbool.h>
 #include "game_math.h"

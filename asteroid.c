@@ -37,12 +37,12 @@ void init_asteroids(struct asteroid *asteroid, struct ship *ship, int w)
     float theta = DEG_TO_RAD(asteroid->starting_pos);
 
     // Set the x and y co-ordinates of the asteroid.
-    // asteroid->pos.x = 
-    //     (w * 0.1) * cos(theta);
-    // asteroid->pos.y =
-    //     (w * 0.1) * sin(theta);
-    asteroid->pos.x = w/2;
-    asteroid->pos.y = w/2;
+    asteroid->pos.x = 
+        (w * 1.1) * cos(theta);
+    asteroid->pos.y =
+        (w * 1.1) * sin(theta);
+    // asteroid->pos.x = w/2;
+    // asteroid->pos.y = w/2;
 
     struct vector2d test = direction_between_points(asteroid->pos, ship->pos);
 
@@ -89,10 +89,13 @@ void move_asteroids(struct asteroid *asteroid, float dt)
 {
     for(int i = 0; i < NUM_ASTEROIDS; i++)
     {
-        struct vector2d result = vector2d_scalar_mult(&asteroid[i].dir, asteroid[i].velocity);
-        result = vector2d_scalar_mult(&result, dt);
+        struct vector2d result;
 
-        asteroid[i].pos = vector2d_addition(&asteroid[i].pos, &result);
+        result.x = asteroid[i].dir.x * asteroid->velocity;
+        result.y = asteroid[i].dir.y * asteroid->velocity;
+
+        asteroid[i].pos.x = asteroid[i].pos.x + result.x;
+        asteroid[i].pos.y = asteroid[i].pos.y + result.y;
     }
 }
 
