@@ -17,9 +17,14 @@
 # include <GL/glut.h>
 #endif
 
+time_t t;
+
 // Initialises the asteroids
-void init_asteroids(struct asteroid *asteroid, struct ship *ship, int w)
+void init_asteroids(struct asteroid *asteroid, struct ship *ship, int w, int h)
 {
+    // Initialise the random number generator.
+    srand((unsigned) time(&t));
+
     // Set the color of the asteroids.
     asteroid->outline_r = 1;
     asteroid->outline_g = 1;
@@ -39,12 +44,13 @@ void init_asteroids(struct asteroid *asteroid, struct ship *ship, int w)
 
     // Set the x and y co-ordinates of the asteroid.
     asteroid->pos.x = 
-        (w * 1.1) * cos(theta);
+        (w * 1.1) * cos(theta)  + w/2;
     asteroid->pos.y =
-        (w * 1.1) * sin(theta);
+        (w * 1.1) * sin(theta) + h/2;
     // asteroid->pos.x = w/2;
     // asteroid->pos.y = w/2;
 
+    // Determine the angle of the asteroid, so its facing the ships current position.
     struct vector2d test = direction_between_points(asteroid->pos, ship->pos);
 
     float length = pythagoras(test.x,test.y);

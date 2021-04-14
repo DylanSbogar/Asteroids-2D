@@ -5,9 +5,10 @@
 
 #define ASTEROID_SPAWN_RADIUS 0.75
 
-#define NUM_ASTEROIDS 10
+#define NUM_ASTEROIDS 1
 
 #include <stdbool.h>
+#include <time.h>
 #include "game_math.h"
 #include "ship.h"
 
@@ -20,7 +21,7 @@ struct asteroid {
     float velocity; 
 };
 
-void init_asteroids(struct asteroid *asteroid, struct ship *ship, int w);
+void init_asteroids(struct asteroid *asteroid, struct ship *ship, int w, int h);
 
 void draw_asteroids(struct asteroid *asteroid);
 

@@ -44,7 +44,7 @@ void on_reshape(int w, int h)
     init_arena(&arena, screen_width, screen_height);
     for(int i = 0; i < NUM_ASTEROIDS; i++)
     {
-        init_asteroids(&asteroids[i], &ship, screen_width);
+        init_asteroids(&asteroids[i], &ship, screen_width, screen_height);
     }
 }
 
