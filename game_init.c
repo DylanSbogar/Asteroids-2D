@@ -39,8 +39,7 @@ void on_reshape(int w, int h)
     screen_width = w;
     screen_height = h;
 
-    // Initialise various game elements.
-
+    // Initialise the various game elements.
     init_ship(&ship, screen_width, screen_height);
     init_arena(&arena, screen_width, screen_height);
     for(int i = 0; i < NUM_ASTEROIDS; i++)
@@ -56,19 +55,13 @@ void on_display()
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    // Check to see whether the ship is nearing any walls.
-    ship_wall_warning(&arena, &ship);
-
-    // Check to see whether the ship has collided with the wall.
-    if(ship_wall_collision(&arena, &ship) == true)
-    {
-        reset_game();
-    }
-
     // Draw the various game elements.
     draw_ship(&ship);
     draw_arena(&arena);
-    draw_asteroids(asteroids);
+    for(int i = 0; i < NUM_ASTEROIDS; i++)
+    {
+        draw_asteroids(&asteroids[i]);
+    }
 
     // Check for and print out any errors.
     int err;
@@ -79,7 +72,7 @@ void on_display()
     glutSwapBuffers();
 }
 
-void update_game_state(struct ship *ship, float dt)
+void update_game_state(struct ship *ship, struct asteroid *asteroid, struct arena *arena, float dt)
 {
     if(kh.moving_forward)
     {
@@ -93,13 +86,30 @@ void update_game_state(struct ship *ship, float dt)
     {
         rotate_ship(ship, 1, dt);
     }
+
+    // Check to see whether the ship is nearing any walls.
+    ship_wall_warning(arena, ship);
+
+    // Check to see whether the ship has collided with the wall.
+    if(ship_wall_collision(arena, ship))
+    {
+        reset_game();
+    }
+
+    for(int i = 0; i < NUM_ASTEROIDS; i++)
+    {
+        if(ship_asteroid_collision(&asteroids[i], ship))
+        {
+            reset_game();
+        }
+    }
 }
 
 void on_idle()
 {
     float cur_time = glutGet(GLUT_ELAPSED_TIME) / 1000.0;
     float dt = cur_time - g_last_time;
-    update_game_state(&ship, dt);
+    update_game_state(&ship, asteroids, &arena, dt);
     move_asteroids(asteroids, dt);
     g_last_time = cur_time;
     glutPostRedisplay();

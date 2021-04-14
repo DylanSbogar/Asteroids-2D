@@ -18,7 +18,6 @@ struct asteroid {
     struct vector2d pos; // Contains co-ordinates, angle and velocity.
     struct vector2d dir; // Unit vector containing direction of the asteroid.
     float velocity; 
-    int seg; // Number of segments in the asteroid, used for random asteroid generation.
 };
 
 void init_asteroids(struct asteroid *asteroid, struct ship *ship, int w);
@@ -27,6 +26,6 @@ void draw_asteroids(struct asteroid *asteroid);
 
 void move_asteroids(struct asteroid *asteroid, float dt);
 
-bool ship_asteroid_collision();
+bool ship_asteroid_collision(struct asteroid *asteroid, struct ship *ship);
 
 #endif // ASTEROID_H

@@ -38,9 +38,6 @@ void init_ship(struct ship *ship, int w, int h)
     ship->dir.x = (temp2.x / length);
     ship->dir.y = (temp2.y / length);
 
-    printf("ship->dir.x=%f\n",ship->dir.x);
-    printf("ship->dir.y=%f\n",ship->dir.y);
-
     // Configurability for ship fill colour (R,G,B)
     ship->fill_r = 0.0;
     ship->fill_g = 1.0;
@@ -84,7 +81,7 @@ void draw_ship(struct ship *ship)
     float theta;
 
     // Draw the ship collision bubble (will make invisible later)
-    glColor3f(ship->outline_r, ship->outline_g, ship->outline_b);
+    glColor3f(1, 0, 1);
     glBegin(GL_LINE_LOOP);
         for(int i = 0; i < 360; i++)
         {
@@ -93,15 +90,15 @@ void draw_ship(struct ship *ship)
         }
     glEnd();
 
-    // Draw the ship arena warning bubble (will make invisible later)
-    glColor3f(ship->outline_r, ship->outline_g, ship->outline_b);
-    glBegin(GL_LINE_LOOP);
-        for(int i = 0; i < 360; i++)
-        {
-            theta = DEG_TO_RAD(i);
-            glVertex2f(SHIP_NEARBY_RADIUS * cos(theta), SHIP_NEARBY_RADIUS *  sin(theta));
-        }
-    glEnd();
+    // // Draw the ship arena warning bubble (will make invisible later)
+    // glColor3f(1, 0, 1);
+    // glBegin(GL_LINE_LOOP);
+    //     for(int i = 0; i < 360; i++)
+    //     {
+    //         theta = DEG_TO_RAD(i);
+    //         glVertex2f(SHIP_NEARBY_RADIUS * cos(theta), SHIP_NEARBY_RADIUS *  sin(theta));
+    //     }
+    // glEnd();
 
     glPopMatrix();
 }

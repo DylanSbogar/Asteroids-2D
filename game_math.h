@@ -3,6 +3,7 @@
 
 #include <math.h>
 #include <ctype.h>
+#include <stdbool.h>
 
 // Converts an angle from radians to degrees.
 #define RAD_TO_DEG(rad) (rad * (180 / M_PI))

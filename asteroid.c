@@ -30,6 +30,7 @@ void init_asteroids(struct asteroid *asteroid, struct ship *ship, int w)
 
     // Set the velocity of the asteroid.
     asteroid->velocity = (rand() % (20 + 1 - 5) + 5);
+    // asteroid->velocity = 0;
 
     // Define a random position around the arena for an asteroid to spawn at.
     asteroid->starting_pos = (rand() % (360 - 1 + 1)) + 1;
@@ -54,35 +55,27 @@ void init_asteroids(struct asteroid *asteroid, struct ship *ship, int w)
 
 void draw_asteroids(struct asteroid *asteroid)
 {
-    for(int i = 0; i < NUM_ASTEROIDS; i++)
+    // Convert the direction unit vector to degrees.
+    float angle = convert_to_angle(asteroid->dir.x, asteroid->dir.y) - 90;
+
+    glMatrixMode(GL_MODELVIEW);
+
+    glPushMatrix();
+    glTranslatef(asteroid->pos.x, asteroid->pos.y, 0);
+    glRotatef(angle, 0.0, 0.0, 1.0);
+
+    float theta;
+
+    // Draw the asteroid.
+    glColor3f(asteroid->outline_r, asteroid->outline_g, asteroid->outline_b);
+    glBegin(GL_LINE_LOOP);
+    for(int i = 0; i < 360; i++)
     {
-        // Convert the direction unit vector to degrees.
-        float angle = convert_to_angle(asteroid->dir.x, asteroid->dir.y) - 90;
-
-        glMatrixMode(GL_MODELVIEW);
-
-        glPushMatrix();
-        glTranslatef(asteroid[i].pos.x, asteroid[i].pos.y, 0);
-        glRotatef(angle, 0.0, 0.0, 1.0);
-
-        float theta;
-
-        // Draw the asteroid.
-        glColor3f(asteroid[i].outline_r, asteroid[i].outline_g, asteroid[i].outline_b);
-        // glBegin(GL_LINE_LOOP);
-        //     glVertex2f(0 - SHIP_WIDTH, 0 - SHIP_HEIGHT);
-        //     glVertex2f(0, 0 - SHIP_HEIGHT * 0.5);
-        //     glVertex2f(0 + SHIP_WIDTH, 0 - SHIP_HEIGHT);
-        //     glVertex2f(0, 0 + SHIP_HEIGHT);
-        // glEnd();
-        glBegin(GL_LINE_LOOP);
-            for(int i = 0; i < 360; i++)
-            {
-                theta = DEG_TO_RAD(i);
-                glVertex2f(asteroid->size * cos(theta), asteroid->size *  sin(theta));
-            }
-        glEnd();
+        theta = DEG_TO_RAD(i);
+        glVertex2f(asteroid->size * cos(theta), asteroid->size *  sin(theta));
     }
+    glEnd();
+    glPopMatrix();
 }
 
 void move_asteroids(struct asteroid *asteroid, float dt)
@@ -99,7 +92,21 @@ void move_asteroids(struct asteroid *asteroid, float dt)
     }
 }
 
-bool ship_asteroid_collision()
+bool ship_asteroid_collision(struct asteroid *asteroid, struct ship *ship)
 {
-    return true;
+    float length = 0;
+    struct vector2d test = direction_between_points(asteroid->pos, ship->pos);
+
+    length = pythagoras(test.x, test.y);
+    // printf("length=%f\n",length);
+    // printf("distance=%f\n",asteroid[i].size + SHIP_COLLISION_RADIUS);
+
+    if(length <= asteroid->size + SHIP_COLLISION_RADIUS)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
