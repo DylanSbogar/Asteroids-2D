@@ -39,6 +39,11 @@ void on_reshape(int w, int h)
     screen_width = w;
     screen_height = h;
 
+    time_t t;
+
+    // Initialise the random number generator.
+    srand((unsigned) time(&t));
+
     // Initialise the various game elements.
     init_ship(&ship, screen_width, screen_height);
     init_arena(&arena, screen_width, screen_height);

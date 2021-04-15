@@ -4,6 +4,7 @@
 #include "ship.h"
 #include "asteroid.h"
 #include "arena.h"
+#include <time.h>
 #include <stdbool.h>
 
 struct key_handler

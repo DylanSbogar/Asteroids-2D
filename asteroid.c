@@ -17,13 +17,9 @@
 # include <GL/glut.h>
 #endif
 
-time_t t;
-
-// Initialises the asteroids
+// Initialises the  asteroids
 void init_asteroids(struct asteroid *asteroid, struct ship *ship, int w, int h)
 {
-    // Initialise the random number generator.
-    srand((unsigned) time(&t));
 
     // Set the color of the asteroids.
     asteroid->outline_r = 1;
@@ -39,14 +35,15 @@ void init_asteroids(struct asteroid *asteroid, struct ship *ship, int w, int h)
 
     // Define a random position around the arena for an asteroid to spawn at.
     asteroid->starting_pos = (rand() % (360 - 1 + 1)) + 1;
+    printf("startingpos=%d\n",asteroid->starting_pos);
 
     float theta = DEG_TO_RAD(asteroid->starting_pos);
 
     // Set the x and y co-ordinates of the asteroid.
     asteroid->pos.x = 
-        (w * 1.1) * cos(theta)  + w/2;
+        (w * 1.1) * cos(theta)  + (w/2);
     asteroid->pos.y =
-        (w * 1.1) * sin(theta) + h/2;
+        (w * 1.1) * sin(theta) + (h/2);
     // asteroid->pos.x = w/2;
     // asteroid->pos.y = w/2;
 

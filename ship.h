@@ -6,7 +6,7 @@
 #define SHIP_HEIGHT 24
 #define SHIP_WIDTH  16
 
-#define SHIP_MOVE_VELOCITY 5
+#define SHIP_MOVE_VELOCITY 7.5
 #define SHIP_ROTATE_VELOCITY 5
 
 #define SHIP_COLLISION 1.125
@@ -22,6 +22,17 @@ struct ship
     float velocity;
     float fill_r, fill_g, fill_b; // Fill colour
     float outline_r, outline_g, outline_b; // Outline colour
+};
+
+struct particle
+{
+    struct vector2d pos;
+    struct vector2d dir;
+    float velocity;
+    float lifespan;
+    float fill_r, fill_g, fill_b;
+    float outline_r, outline_g, outline_b;
+    float size;
 };
 
 // Draws the ship.

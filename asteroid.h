@@ -5,10 +5,9 @@
 
 #define ASTEROID_SPAWN_RADIUS 0.75
 
-#define NUM_ASTEROIDS 1
+#define NUM_ASTEROIDS 10
 
 #include <stdbool.h>
-#include <time.h>
 #include "game_math.h"
 #include "ship.h"
 
