@@ -4,6 +4,7 @@
 #define ASTEROID_ROTATE_VELOCITY 10
 #define ASTEROID_SPAWN_RADIUS 0.75
 #define MAX_ASTEROIDS 10 // Defines the max number of rounds, since the number of asteroids increments each round from 1.
+#define ASTEROID_POINTS 16
 
 #include <stdbool.h>
 #include "game_math.h"

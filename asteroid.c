@@ -26,10 +26,10 @@ void init_asteroid(struct asteroid *asteroid, ship *ship, int w, int h)
     asteroid->outline_b = 1;
 
     // Set the size of the asteroid.
-    asteroid->size = 75;
+    asteroid->size = rand() % (75 + 1 - 50) + 50;
 
     // Set the velocity of the asteroid.
-    asteroid->velocity = (rand() % (20 + 1 - 5) + 5);
+    asteroid->velocity = (rand() % (20 + 1 - 10) + 10);
 
     // 2.1. Launch Position
     // Define a random position around the arena for an asteroid to spawn at.
@@ -52,12 +52,15 @@ void init_asteroid(struct asteroid *asteroid, ship *ship, int w, int h)
 
     // Start asteroids as deactivated.
     asteroid->activated = false;
+    printf("asteroid.size=%d\n",asteroid->size);
 }
 
 void draw_asteroid(struct asteroid *asteroid)
 {
     // Convert the direction unit vector to degrees.
     float angle = convert_to_angle(asteroid->dir.x, asteroid->dir.y) - 90;
+    float x, y;
+    float theta;
 
     glMatrixMode(GL_MODELVIEW);
 
@@ -65,15 +68,15 @@ void draw_asteroid(struct asteroid *asteroid)
     glTranslatef(asteroid->pos.x, asteroid->pos.y, 0);
     glRotatef(angle, 0.0, 0.0, 1.0);
 
-    float theta;
-
-    // Draw the asteroid.
     glColor3f(asteroid->outline_r, asteroid->outline_g, asteroid->outline_b);
     glBegin(GL_LINE_LOOP);
-    for(int i = 0; i < 360; i++)
+
+    for(int i = 0; i < ASTEROID_POINTS; i++)
     {
-        theta = DEG_TO_RAD(i);
-        glVertex2f(asteroid->size * cos(theta), asteroid->size *  sin(theta));
+        theta = i / (float)ASTEROID_POINTS * 2.0 * M_PI;
+        x = asteroid->size * cosf(theta);
+        y = asteroid->size * sinf(theta);
+        glVertex2f(x, y);
     }
     glEnd();
     glPopMatrix();
