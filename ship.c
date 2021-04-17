@@ -20,28 +20,29 @@
 void init_ship(struct ship *ship, int w, int h)
 {
     // Setting the initial co-ords of the ship
-    ship->pos.x = w * 0.25;
-    ship->pos.y = h * 0.25;
+    ship->pos.x = (w * 0.05) + (SHIP_NEARBY_RADIUS * 1.1);
+    ship->pos.y = (h * 0.05) + (SHIP_NEARBY_RADIUS * 1.1);
 
     // Setting the velocity of the ship.
     ship->velocity = SHIP_MOVE_VELOCITY;
 
-    // Same as above but unit vector for dir.
-    struct vector2d temp;
-    temp.x = w*0.75;
-    temp.y = h*0.75;
+    // Set the coordinates for the ship's direction to face the upper-right corner of the screen.
+    struct vector2d direction;
+    direction.x = w;
+    direction.y = h;
 
-    struct vector2d temp2 = direction_between_points(ship->pos, temp);
+    // Determine the length of the vector to prep for normalisation.
+    struct vector2d direction2 = direction_between_points(ship->pos, direction);
+    float length = pythagoras(direction2.x, direction2.y);
 
-    float length = pythagoras(temp2.x, temp2.y);
-
-    ship->dir.x = (temp2.x / length);
-    ship->dir.y = (temp2.y / length);
+    // Normalising the unit vector representing direction.
+    ship->dir.x = (direction2.x / length);
+    ship->dir.y = (direction2.y / length);
 
     // Configurability for ship fill colour (R,G,B)
     ship->fill_r = 0.0;
-    ship->fill_g = 1.0;
-    ship->fill_b = 0.0;
+    ship->fill_g = 0.0;
+    ship->fill_b = 1.0;
 
     // Configurability for ship outline colour (R,G,B)
     ship->outline_r = 255.0;
@@ -57,6 +58,8 @@ void draw_ship(struct ship *ship)
     float angle = convert_to_angle(ship->dir.x, ship->dir.y) - 90;
 
     glPushMatrix();
+
+    // Translate and rotate the ship.
     glTranslatef(ship->pos.x, ship->pos.y, 0);
     glRotatef(angle, 0.0, 0.0, 1.0);
 
@@ -80,7 +83,7 @@ void draw_ship(struct ship *ship)
 
     float theta;
 
-    // Draw the ship collision bubble (will make invisible later)
+    // Draw the ship collision bubble (will remove later)
     glColor3f(1, 0, 1);
     glBegin(GL_LINE_LOOP);
         for(int i = 0; i < 360; i++)
@@ -90,16 +93,6 @@ void draw_ship(struct ship *ship)
         }
     glEnd();
 
-    // // Draw the ship arena warning bubble (will make invisible later)
-    // glColor3f(1, 0, 1);
-    // glBegin(GL_LINE_LOOP);
-    //     for(int i = 0; i < 360; i++)
-    //     {
-    //         theta = DEG_TO_RAD(i);
-    //         glVertex2f(SHIP_NEARBY_RADIUS * cos(theta), SHIP_NEARBY_RADIUS *  sin(theta));
-    //     }
-    // glEnd();
-
     glPopMatrix();
 }
 
@@ -107,8 +100,10 @@ void rotate_ship(struct ship* ship, int turn_val, float dt)
 {
     // Convert the unit vector into an angle in degrees.
     float new_angle = convert_to_angle(ship->dir.x, ship->dir.y);
+
     // Increment/Decrement the angle depending on whether the player is turning left/right.
     new_angle += turn_val * SHIP_ROTATE_VELOCITY;
+
     // Convert the angle back to radians for functions.
     float new_angle_rad = DEG_TO_RAD(new_angle);
 
@@ -121,9 +116,12 @@ void move_ship(struct ship* ship, float dt)
 {
     struct vector2d result;
 
+    // Multiply the ships direction vector by the ships velocity.
     result.x = ship->dir.x * ship->velocity;
     result.y = ship->dir.y * ship->velocity;
 
+    // Add the resultant vector with the ships corrent position vector,
+    // then set that as the ships current postiion.
     ship->pos.x = ship->pos.x + result.x;
     ship->pos.y = ship->pos.y + result.y;
 }

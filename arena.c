@@ -19,21 +19,24 @@
 
 void init_arena(struct arena *arena, int w, int h)
 {
+    // Set the bottom left corner of the arena.
     arena->pos1.x = w * (1 - ARENA_PERCENTAGE);
     arena->pos1.y = h * (1 - ARENA_PERCENTAGE);
 
+    // Set the top right corner of the arena.
     arena->pos2.x = w * ARENA_PERCENTAGE;
     arena->pos2.y = h * ARENA_PERCENTAGE;
 }
 
 void draw_arena(struct arena *arena)
 {
+    // Using the 2 corners from the init method, draw each
+    // of the 4 wall segments.
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
 
     // Draw each line separately as they need to be individually changed,
     // same goes for colours, set the color of each line individually as well.
-    // glLineWidth(2.0f);
     glBegin(GL_LINES);
         // Draw the southern wall of the arena.
         glColor3f(arena->south_r, arena->south_g, arena->south_b);

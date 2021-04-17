@@ -18,6 +18,8 @@
 
 #define KEY_ESC 27
 
+int rounds = 0;
+int temprounds = 0;
 int screen_width = 0;
 int screen_height = 0;
 float g_last_time = 0.0;
@@ -26,7 +28,7 @@ float g_last_time = 0.0;
 struct key_handler kh;
 struct arena arena;
 struct ship ship;
-struct asteroid asteroids[NUM_ASTEROIDS];
+struct asteroid asteroids[MAX_ASTEROIDS];
 
 void on_reshape(int w, int h)
 {
@@ -47,9 +49,9 @@ void on_reshape(int w, int h)
     // Initialise the various game elements.
     init_ship(&ship, screen_width, screen_height);
     init_arena(&arena, screen_width, screen_height);
-    for(int i = 0; i < NUM_ASTEROIDS; i++)
+    for(int i = 0; i < rounds; i++)
     {
-        init_asteroids(&asteroids[i], &ship, screen_width, screen_height);
+        init_asteroid(&asteroids[i], &ship, screen_width, screen_height);
     }
 }
 
@@ -63,9 +65,9 @@ void on_display()
     // Draw the various game elements.
     draw_ship(&ship);
     draw_arena(&arena);
-    for(int i = 0; i < NUM_ASTEROIDS; i++)
+    for(int i = 0; i < rounds; i++)
     {
-        draw_asteroids(&asteroids[i]);
+        draw_asteroid(&asteroids[i]);
     }
 
     // Check for and print out any errors.
@@ -101,11 +103,29 @@ void update_game_state(struct ship *ship, struct asteroid *asteroid, struct aren
         reset_game();
     }
 
-    for(int i = 0; i < NUM_ASTEROIDS; i++)
+    for(int i = 0; i < rounds; i++)
     {
         if(ship_asteroid_collision(&asteroids[i], ship))
         {
             reset_game();
+        }
+    }
+
+    for(int i = 0; i < rounds; i++)
+    {
+        temprounds = checkActivated(&asteroids[i], screen_width, screen_height, temprounds);
+    }
+
+    if(temprounds == 0)
+    {
+        printf("ROUND OVER\n");
+        rounds++;
+        temprounds = rounds;
+        printf("STARTING ROUND %d\n",rounds);
+
+        for(int i = 0; i < rounds; i++)
+        {
+            init_asteroid(&asteroids[i], ship, screen_width, screen_height);
         }
     }
 }
@@ -115,7 +135,7 @@ void on_idle()
     float cur_time = glutGet(GLUT_ELAPSED_TIME) / 1000.0;
     float dt = cur_time - g_last_time;
     update_game_state(&ship, asteroids, &arena, dt);
-    move_asteroids(asteroids, dt);
+    move_asteroid(asteroids, dt, rounds);
     g_last_time = cur_time;
     glutPostRedisplay();
 }
@@ -176,6 +196,9 @@ void reset_game()
 
 void init_game()
 {
+    rounds = 1;
+    temprounds = 1;
+
     // Setting up the window.
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
     glutCreateWindow("Asteroids - Assignment 1");

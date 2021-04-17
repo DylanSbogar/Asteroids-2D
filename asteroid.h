@@ -2,10 +2,8 @@
 #define ASTEROID_H
 
 #define ASTEROID_ROTATE_VELOCITY 10
-
 #define ASTEROID_SPAWN_RADIUS 0.75
-
-#define NUM_ASTEROIDS 10
+#define MAX_ASTEROIDS 10 // Defines the max number of rounds, since the number of asteroids increments each round from 1.
 
 #include <stdbool.h>
 #include "game_math.h"
@@ -18,14 +16,17 @@ struct asteroid {
     struct vector2d pos; // Contains co-ordinates, angle and velocity.
     struct vector2d dir; // Unit vector containing direction of the asteroid.
     float velocity; 
+    bool activated; // Is true when the asteroid is on screen.
 };
 
-void init_asteroids(struct asteroid *asteroid, struct ship *ship, int w, int h);
+void init_asteroid(struct asteroid *asteroid, struct ship *ship, int w, int h);
 
-void draw_asteroids(struct asteroid *asteroid);
+void draw_asteroid(struct asteroid *asteroid);
 
-void move_asteroids(struct asteroid *asteroid, float dt);
+void move_asteroid(struct asteroid *asteroid, float dt, int round);
 
 bool ship_asteroid_collision(struct asteroid *asteroid, struct ship *ship);
+
+int checkActivated(struct asteroid *asteroid, int w, int h, int temp);
 
 #endif // ASTEROID_H
