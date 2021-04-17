@@ -26,7 +26,7 @@ void init_asteroid(struct asteroid *asteroid, ship *ship, int w, int h)
     asteroid->outline_b = 1;
 
     // Set the size of the asteroid.
-    asteroid->size = rand() % (75 + 1 - 50) + 50;
+    asteroid->size = rand() % (ASTEROID_MAX_SPEED + 1 - ASTEROID_MIN_SPEED) + ASTEROID_MIN_SPEED;
 
     // Set the velocity of the asteroid.
     asteroid->velocity = (rand() % (20 + 1 - 10) + 10);
@@ -52,7 +52,7 @@ void init_asteroid(struct asteroid *asteroid, ship *ship, int w, int h)
 
     // Start asteroids as deactivated.
     asteroid->activated = false;
-    printf("asteroid.size=%d\n",asteroid->size);
+    // printf("asteroid.size=%d\n",asteroid->size);
 }
 
 void draw_asteroid(struct asteroid *asteroid)
