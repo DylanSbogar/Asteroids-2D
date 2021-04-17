@@ -18,7 +18,7 @@
 #endif
 
 // Initialises the  asteroids
-void init_asteroid(struct asteroid *asteroid, struct ship *ship, int w, int h)
+void init_asteroid(struct asteroid *asteroid, ship *ship, int w, int h)
 {
     // Set the color of the asteroids.
     asteroid->outline_r = 1;
@@ -43,7 +43,7 @@ void init_asteroid(struct asteroid *asteroid, struct ship *ship, int w, int h)
         (w * 1.1) * sin(theta) + (h/2);
 
     // Determine the angle of the asteroid, so its facing the ships current position.
-    struct vector2d test = direction_between_points(asteroid->pos, ship->pos);
+    vector2d test = direction_between_points(asteroid->pos, ship->pos);
     float length = pythagoras(test.x,test.y);
 
     // Normalise the direction vector of the asteroid.
@@ -83,7 +83,7 @@ void move_asteroid(struct asteroid *asteroid, float dt, int round)
 {
     for(int i = 0; i < round; i++)
     {
-        struct vector2d result;
+        vector2d result;
 
         result.x = asteroid[i].dir.x * asteroid[i].velocity;
         result.y = asteroid[i].dir.y * asteroid[i].velocity;
@@ -93,10 +93,26 @@ void move_asteroid(struct asteroid *asteroid, float dt, int round)
     }
 }
 
-bool ship_asteroid_collision(struct asteroid *asteroid, struct ship *ship)
+void rotate_asteroid(struct asteroid *asteroid, int turn_val, float dt)
+{
+    // Convert the unit vector into an angle in degrees.
+    float new_angle = convert_to_angle(asteroid->dir.x, asteroid->dir.y);
+
+    // Increment/Decrement the angle depending on whether the player is turning left/right.
+    new_angle += turn_val * SHIP_ROTATE_VELOCITY;
+
+    // Convert the angle back to radians for functions.
+    float new_angle_rad = DEG_TO_RAD(new_angle);
+
+    // Update the co-ordinates of the unit vector.
+    asteroid->dir.x = cos(new_angle_rad);
+    asteroid->dir.y = sin(new_angle_rad);
+}
+
+bool ship_asteroid_collision(struct asteroid *asteroid, ship *ship)
 {
     float length = 0;
-    struct vector2d test = direction_between_points(asteroid->pos, ship->pos);
+    vector2d test = direction_between_points(asteroid->pos, ship->pos);
 
     length = pythagoras(test.x, test.y);
 

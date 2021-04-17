@@ -6,13 +6,14 @@
 #include "arena.h"
 #include <time.h>
 #include <stdbool.h>
+#include <unistd.h>
 
-struct key_handler
+typedef struct 
 {
     bool moving_forward;
     bool turning_left;
     bool turning_right;
-};
+} key_handler;
 
 // Initialisation function.
 void init_game();
@@ -32,7 +33,7 @@ void ship_wall_warning();
 // Recalls the init_game method, starting the game anew.
 void reset_game();
 
-void update_game_state(struct ship *ship, struct asteroid *asteroid, struct arena *arena, float dt);
+void update_game_state(ship *ship, struct asteroid *asteroid, arena *arena, float dt);
 
 // Glut keyboard function.
 void on_key_press(unsigned char key, int x, int y);

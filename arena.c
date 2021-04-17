@@ -17,7 +17,7 @@
 # include <GL/glut.h>
 #endif
 
-void init_arena(struct arena *arena, int w, int h)
+void init_arena(arena *arena, int w, int h)
 {
     // Set the bottom left corner of the arena.
     arena->pos1.x = w * (1 - ARENA_PERCENTAGE);
@@ -28,7 +28,7 @@ void init_arena(struct arena *arena, int w, int h)
     arena->pos2.y = h * ARENA_PERCENTAGE;
 }
 
-void draw_arena(struct arena *arena)
+void draw_arena(arena *arena)
 {
     // Using the 2 corners from the init method, draw each
     // of the 4 wall segments.
@@ -62,7 +62,7 @@ void draw_arena(struct arena *arena)
     glPopMatrix();
 }
 
-void ship_wall_warning(struct arena *arena, struct ship *ship)
+void ship_wall_warning(arena *arena, ship *ship)
 {
     // Checking collisions at the northern wall.
     if(arena->pos2.y <= ship->pos.y + SHIP_NEARBY_RADIUS)
@@ -129,7 +129,7 @@ void ship_wall_warning(struct arena *arena, struct ship *ship)
     }
 }
 
-bool ship_wall_collision(struct arena *arena, struct ship *ship)
+bool ship_wall_collision(arena *arena, ship *ship)
 {
     // Checking collisions at the northern wall.
     if(arena->pos2.y <= ship->pos.y + SHIP_COLLISION_RADIUS)

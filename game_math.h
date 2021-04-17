@@ -15,11 +15,11 @@
 #define SQUARE(expr) ((expr) * (expr))
 
 // A two-dimensional vector point.
-struct vector2d
+typedef struct 
 {
     double x; // X co-ordinate of the object.
     double y; // Y co-ordinate of the object.
-};
+} vector2d;
 
 static inline float convert_to_angle(float x, float y)
 {
@@ -32,9 +32,9 @@ static inline float pythagoras(float x, float y)
     return sqrt(pow(x,2) + pow(y,2));
 }
 
-static inline struct vector2d direction_between_points(struct vector2d source, struct vector2d target)
+static inline vector2d direction_between_points(vector2d source, vector2d target)
 {
-    struct vector2d result;
+    vector2d result;
 
     result.x = target.x - source.x;
     result.y = target.y - source.y;
@@ -42,7 +42,7 @@ static inline struct vector2d direction_between_points(struct vector2d source, s
     return result;
 }
 
-static inline struct vector2d vector2d_scalar_mult(struct vector2d *vec, float s)
+static inline vector2d vector2d_scalar_mult(vector2d *vec, float s)
 {
     vec->x = vec->x * s; // Multiply the x co-ordinate by the scalar s
     vec->y = vec->y * s; // Multiply the y co-ordinate by the scalar s
@@ -50,9 +50,9 @@ static inline struct vector2d vector2d_scalar_mult(struct vector2d *vec, float s
     return *vec; // Return the updated vector.
 }
 
-static inline struct vector2d vector2d_addition(struct vector2d *vec, struct vector2d *vec2)
+static inline vector2d vector2d_addition(vector2d *vec, vector2d *vec2)
 {
-    struct vector2d result; // Instantiate a new vector to return since we dont want to update the existing one.
+    vector2d result; // Instantiate a new vector to return since we dont want to update the existing one.
 
     result.x = vec->x + vec2->x; // Add both vector's x co-ordinates together and save them to the new vector.
     result.y = vec->y + vec2->y; // Add both vector's y co-ordinates together and save them to the new vector.

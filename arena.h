@@ -8,21 +8,21 @@
 // Percentage of the screen width and height that the arena will encompass.
 #define ARENA_PERCENTAGE 0.95
 
-struct arena
+typedef struct
 {
     float north_r, north_g, north_b; // Color values for the northern wall.
     float south_r, south_g, south_b; // Color values for the southern wall.
     float east_r, east_g, east_b; // Color values for the western wall.
     float west_r, west_g, west_b; // Color values for the eastern wall.
-    struct vector2d pos1, pos2; // Co-ordinates for the south-west and north-east corners of the wall.
-};
+    vector2d pos1, pos2; // Co-ordinates for the south-west and north-east corners of the wall.
+} arena;
 
-void init_arena(struct arena *arena, int w, int h);
+void init_arena(arena *arena, int w, int h);
 
-void draw_arena(struct arena *arena);
+void draw_arena(arena *arena);
 
-void ship_wall_warning(struct arena *arena, struct ship *ship);
+void ship_wall_warning(arena *arena, ship *ship);
 
-bool ship_wall_collision(struct arena *arena, struct ship *ship);
+bool ship_wall_collision(arena *arena, ship *ship);
 
 #endif // ARENA_H

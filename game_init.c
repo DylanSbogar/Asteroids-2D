@@ -25,9 +25,10 @@ int screen_height = 0;
 float g_last_time = 0.0;
 
 // Instantiate various game elements.
-struct key_handler kh;
-struct arena arena;
-struct ship ship;
+key_handler kh;
+arena arena_obj;
+ship ship_obj;
+particle particles[MAX_PARTICLES];
 struct asteroid asteroids[MAX_ASTEROIDS];
 
 void on_reshape(int w, int h)
@@ -41,17 +42,16 @@ void on_reshape(int w, int h)
     screen_width = w;
     screen_height = h;
 
-    time_t t;
-
     // Initialise the random number generator.
+    time_t t;
     srand((unsigned) time(&t));
 
     // Initialise the various game elements.
-    init_ship(&ship, screen_width, screen_height);
-    init_arena(&arena, screen_width, screen_height);
+    init_ship(&ship_obj, screen_width, screen_height);
+    init_arena(&arena_obj, screen_width, screen_height);
     for(int i = 0; i < rounds; i++)
     {
-        init_asteroid(&asteroids[i], &ship, screen_width, screen_height);
+        init_asteroid(&asteroids[i], &ship_obj, screen_width, screen_height);
     }
 }
 
@@ -63,8 +63,8 @@ void on_display()
     glLoadIdentity();
 
     // Draw the various game elements.
-    draw_ship(&ship);
-    draw_arena(&arena);
+    draw_ship(&ship_obj);
+    draw_arena(&arena_obj);
     for(int i = 0; i < rounds; i++)
     {
         draw_asteroid(&asteroids[i]);
@@ -79,7 +79,7 @@ void on_display()
     glutSwapBuffers();
 }
 
-void update_game_state(struct ship *ship, struct asteroid *asteroid, struct arena *arena, float dt)
+void update_game_state(ship *ship, struct asteroid *asteroid, arena *arena, float dt)
 {
     if(kh.moving_forward)
     {
@@ -105,24 +105,37 @@ void update_game_state(struct ship *ship, struct asteroid *asteroid, struct aren
 
     for(int i = 0; i < rounds; i++)
     {
+        // Rotate the asteroid in its given direction.
+        // rotate_asteroid(&asteroid[i].rotate_dir)
+
+        // If an asteroid collides with the ship
         if(ship_asteroid_collision(&asteroids[i], ship))
         {
+            // Start the game over again.
             reset_game();
         }
     }
 
+    // For each asteroid in the round
     for(int i = 0; i < rounds; i++)
     {
+        // Return an int representing how many asteroids are 'active' on the field.
         temprounds = checkActivated(&asteroids[i], screen_width, screen_height, temprounds);
     }
 
+    // If the number of active asteroids is 0, meaning the wave is complete.
     if(temprounds == 0)
     {
+        // Increment the round number.
         printf("ROUND OVER\n");
         rounds++;
         temprounds = rounds;
+
         printf("STARTING ROUND %d\n",rounds);
 
+        // TODO: Insert a way to wait x amount of seconds?
+
+        // Create x amount of new asteroids corresponding with the round number.
         for(int i = 0; i < rounds; i++)
         {
             init_asteroid(&asteroids[i], ship, screen_width, screen_height);
@@ -134,7 +147,7 @@ void on_idle()
 {
     float cur_time = glutGet(GLUT_ELAPSED_TIME) / 1000.0;
     float dt = cur_time - g_last_time;
-    update_game_state(&ship, asteroids, &arena, dt);
+    update_game_state(&ship_obj, asteroids, &arena_obj, dt);
     move_asteroid(asteroids, dt, rounds);
     g_last_time = cur_time;
     glutPostRedisplay();

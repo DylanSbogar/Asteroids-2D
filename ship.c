@@ -17,7 +17,7 @@
 # include <GL/glut.h>
 #endif
 
-void init_ship(struct ship *ship, int w, int h)
+void init_ship(ship *ship, int w, int h)
 {
     // Setting the initial co-ords of the ship
     ship->pos.x = (w * 0.05) + (SHIP_NEARBY_RADIUS * 1.1);
@@ -27,12 +27,12 @@ void init_ship(struct ship *ship, int w, int h)
     ship->velocity = SHIP_MOVE_VELOCITY;
 
     // Set the coordinates for the ship's direction to face the upper-right corner of the screen.
-    struct vector2d direction;
+    vector2d direction;
     direction.x = w;
     direction.y = h;
 
     // Determine the length of the vector to prep for normalisation.
-    struct vector2d direction2 = direction_between_points(ship->pos, direction);
+    vector2d direction2 = direction_between_points(ship->pos, direction);
     float length = pythagoras(direction2.x, direction2.y);
 
     // Normalising the unit vector representing direction.
@@ -50,7 +50,7 @@ void init_ship(struct ship *ship, int w, int h)
     ship->outline_b = 255.0;
 }
 
-void draw_ship(struct ship *ship)
+void draw_ship(ship *ship)
 {
     glMatrixMode(GL_MODELVIEW);
  
@@ -96,7 +96,7 @@ void draw_ship(struct ship *ship)
     glPopMatrix();
 }
 
-void rotate_ship(struct ship* ship, int turn_val, float dt)
+void rotate_ship(ship* ship, int turn_val, float dt)
 {
     // Convert the unit vector into an angle in degrees.
     float new_angle = convert_to_angle(ship->dir.x, ship->dir.y);
@@ -112,9 +112,9 @@ void rotate_ship(struct ship* ship, int turn_val, float dt)
     ship->dir.y = sin(new_angle_rad);
 }
 
-void move_ship(struct ship* ship, float dt)
+void move_ship(ship* ship, float dt)
 {
-    struct vector2d result;
+    vector2d result;
 
     // Multiply the ships direction vector by the ships velocity.
     result.x = ship->dir.x * ship->velocity;
@@ -124,4 +124,27 @@ void move_ship(struct ship* ship, float dt)
     // then set that as the ships current postiion.
     ship->pos.x = ship->pos.x + result.x;
     ship->pos.y = ship->pos.y + result.y;
+}
+
+void init_particle(particle *particle, ship *ship)
+{
+    // Set the x and y coordinates of the particle relative to the ship.
+    particle->pos.x = ship->pos.x - 10 + (rand() % 20);
+    particle->pos.y = ship->pos.y - 10 + (rand() % 20);
+
+    // Set the x and y coordinates of the particle's direction vector.
+    particle->dir.x = -ship->dir.x;
+    particle->dir.y = -ship->dir.y;
+
+    // Set the initial radius of the particle.
+    particle->size = PARTICLE_START_SIZE;
+
+    // Set the lifespan of the particle.
+    particle->lifespan = PARTICLE_LIFESPAN;
+
+    // Set the particles velocity.
+    particle->velocity = PARTICLE_VELOCITY;
+
+    // Draw the particle.
+    
 }
