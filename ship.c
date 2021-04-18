@@ -17,6 +17,11 @@
 # include <GL/glut.h>
 #endif
 
+int particle_cooldown = 0;
+int current_particle = 0;
+
+particle particles[MAX_PARTICLES];
+
 void init_ship(ship *ship, int w, int h)
 {
     // Setting the initial co-ords of the ship
@@ -124,27 +129,4 @@ void move_ship(ship* ship, float dt)
     // then set that as the ships current postiion.
     ship->pos.x = ship->pos.x + result.x;
     ship->pos.y = ship->pos.y + result.y;
-}
-
-void init_particle(particle *particle, ship *ship)
-{
-    // Set the x and y coordinates of the particle relative to the ship.
-    particle->pos.x = ship->pos.x - 10 + (rand() % 20);
-    particle->pos.y = ship->pos.y - 10 + (rand() % 20);
-
-    // Set the x and y coordinates of the particle's direction vector.
-    particle->dir.x = -ship->dir.x;
-    particle->dir.y = -ship->dir.y;
-
-    // Set the initial radius of the particle.
-    particle->size = PARTICLE_START_SIZE;
-
-    // Set the lifespan of the particle.
-    particle->lifespan = PARTICLE_LIFESPAN;
-
-    // Set the particles velocity.
-    particle->velocity = PARTICLE_VELOCITY;
-
-    // Draw the particle.
-    
 }

@@ -58,16 +58,17 @@ void init_asteroid(struct asteroid *asteroid, ship *ship, int w, int h)
         (w * 1.1) * sin(theta) + (h/2);
 
     // Determine the angle of the asteroid, so its facing the ships current position.
-    vector2d test = direction_between_points(asteroid->pos, ship->pos);
-    float length = pythagoras(test.x,test.y);
+    vector2d new_vec = direction_between_points(asteroid->pos, ship->pos);
+    float length = pythagoras(new_vec.x,new_vec.y);
 
     // Normalise the direction vector of the asteroid.
-    asteroid->dir.x = (test.x / length);
-    asteroid->dir.y = (test.y / length);
+    asteroid->dir.x = (new_vec.x / length);
+    asteroid->dir.y = (new_vec.y / length);
 
     // Start asteroids as deactivated.
     asteroid->activated = false;
 
+    // Generate an array of random points for the proceduraly generated asteroid shape.
     for(int i = 0; i < ASTEROID_POINTS; i++)
     {
         asteroid->points[i] = (rand() % (ASTEROID_MAX_SIZE + 1 - ASTEROID_MIN_SIZE) + ASTEROID_MIN_SIZE);
@@ -83,12 +84,14 @@ void draw_asteroid(struct asteroid *asteroid)
 
     glPushMatrix();
     glTranslatef(asteroid->pos.x, asteroid->pos.y, 0);
+    // Rotate by the angle parameter, which has zero effect on the direction its moving.
     glRotatef(asteroid->angle, 0.0, 0.0, 1.0);
 
+    // Apply the custom color.
     glColor3f(asteroid->outline_r, asteroid->outline_g, asteroid->outline_b);
     glBegin(GL_LINE_LOOP);
 
-
+    // Draw the asteroid using the random points.
     for(int i = 0; i < ASTEROID_POINTS; i++)
     {
         theta = i / (float)ASTEROID_POINTS * 2.0 * M_PI;
@@ -123,9 +126,9 @@ void rotate_asteroid(struct asteroid *asteroid, int turn_val, float dt)
 bool ship_asteroid_collision(struct asteroid *asteroid, ship *ship)
 {
     float length = 0;
-    vector2d test = direction_between_points(asteroid->pos, ship->pos);
+    vector2d new_vec = direction_between_points(asteroid->pos, ship->pos);
 
-    length = pythagoras(test.x, test.y);
+    length = pythagoras(new_vec.x, new_vec.y);
 
     if(length <= asteroid->size + SHIP_COLLISION_RADIUS)
     {
@@ -137,7 +140,7 @@ bool ship_asteroid_collision(struct asteroid *asteroid, ship *ship)
     }
 }
 
-int checkActivated(struct asteroid *asteroid, int w, int h, int temp)
+int checkActivated(struct asteroid *asteroid, int w, int h, int num_detected)
 {
         // If the asteroid is on-screen.
         if((asteroid->pos.x <= w && asteroid->pos.x >= 0) && (asteroid->pos.y <=h && asteroid->pos.y >= 0))
@@ -153,18 +156,18 @@ int checkActivated(struct asteroid *asteroid, int w, int h, int temp)
             {
                 // asteroid->velocity = 0;
                 asteroid->activated = false;
-                temp--;
-                return temp;
+                num_detected--;
+                return num_detected;
             }
             // Check if the asteroid is above or below the screen respectively.
             if(h <= asteroid->pos.y || 0 >= asteroid->pos.y)
             {
                 // asteroid->velocity = 0;
                 asteroid->activated = false;
-                temp--;
-                return temp;
+                num_detected--;
+                return num_detected;
             }
         }
 
-        return temp;
+        return num_detected;
 }

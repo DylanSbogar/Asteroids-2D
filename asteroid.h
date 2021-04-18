@@ -1,15 +1,15 @@
 #ifndef ASTEROID_H
 #define ASTEROID_H
 
-#define ASTEROID_MIN_SIZE 50
+#define ASTEROID_MIN_SIZE 60
 #define ASTEROID_MAX_SIZE 75
 
 #define ASTEROID_ROTATE_MIN_SPEED 5
-#define ASTEROID_ROTATE_MAX_SPEED 10
+#define ASTEROID_ROTATE_MAX_SPEED 8
 #define ASTEROID_SPAWN_RADIUS 0.75
 
 #define MAX_ASTEROIDS 10 // Defines the max number of rounds, since the number of asteroids increments each round from 1.
-#define ASTEROID_POINTS 32
+#define ASTEROID_POINTS 24
 
 #include <stdbool.h>
 #include "game_math.h"
@@ -39,6 +39,6 @@ void rotate_asteroid(struct asteroid *asteroid, int turn_val, float dt);
 
 bool ship_asteroid_collision(struct asteroid *asteroid, ship *ship);
 
-int checkActivated(struct asteroid *asteroid, int w, int h, int temp);
+int checkActivated(struct asteroid *asteroid, int w, int h, int num_detected);
 
 #endif // ASTEROID_H

@@ -37,6 +37,7 @@ typedef struct
     vector2d pos; // Vector representing the particle's co-ordinates.
     vector2d dir; // Unit vector representing direction of the vector.
     float velocity; // Velocity of the particle.
+    float radius;
     int lifespan; // Lifespan of the particle.
     float size; // Radius of the particle.
     float fill_r, fill_g, fill_b; // Fill colour
@@ -54,7 +55,5 @@ void move_ship(ship* ship, float dt);
 
 // Rotates the ship.
 void rotate_ship(ship* ship, int turn_val, float dt);
-
-void init_particle(particle *particle, ship *ship);
 
 #endif // SHIP_H

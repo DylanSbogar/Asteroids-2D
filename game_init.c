@@ -18,8 +18,8 @@
 
 #define KEY_ESC 27
 
-int rounds = 0;
-int temprounds = 0;
+int round_num = 0;
+int temp_round_num = 0;
 bool game_over = false;
 
 int cur_time = 0;
@@ -54,7 +54,7 @@ void on_reshape(int w, int h)
     // Initialise the various game elements.
     init_ship(&ship_obj, screen_width, screen_height);
     init_arena(&arena_obj, screen_width, screen_height);
-    for(int i = 0; i < rounds; i++)
+    for(int i = 0; i < round_num; i++)
     {
         init_asteroid(&asteroids[i], &ship_obj, screen_width, screen_height);
     }
@@ -70,7 +70,7 @@ void on_display()
     // Draw the various game elements.
     draw_ship(&ship_obj);
     draw_arena(&arena_obj);
-    for(int i = 0; i < rounds; i++)
+    for(int i = 0; i < round_num; i++)
     {
         draw_asteroid(&asteroids[i]);
     }
@@ -97,6 +97,7 @@ void update_game_state(ship *ship, struct asteroid *asteroid, arena *arena, floa
     {
         if(kh_obj.moving_forward)
         {
+            launch_particle(&ship_obj);
             move_ship(ship, dt);
         }
         if(kh_obj.turning_left)
@@ -124,7 +125,7 @@ void update_game_state(ship *ship, struct asteroid *asteroid, arena *arena, floa
             game_over = true;
         }
 
-        for(int i = 0; i < rounds; i++)
+        for(int i = 0; i < round_num; i++)
         {
             // Rotate the asteroid in its given direction.
             // rotate_asteroid(&asteroid[i].rotate_dir)
@@ -139,23 +140,23 @@ void update_game_state(ship *ship, struct asteroid *asteroid, arena *arena, floa
         }
 
         // For each asteroid in the round
-        for(int i = 0; i < rounds; i++)
+        for(int i = 0; i < round_num; i++)
         {
             // Return an int representing how many asteroids are 'active' on the field.
-            temprounds = checkActivated(&asteroids[i], screen_width, screen_height, temprounds);
+            temp_round_num = checkActivated(&asteroids[i], screen_width, screen_height, temp_round_num);
         }
 
         // If the number of active asteroids is 0, meaning the wave is complete.
-        if(temprounds == 0)
+        if(temp_round_num == 0)
         {
             // Increment the round number.
-            rounds++;
-            temprounds = rounds;
+            round_num++;
+            temp_round_num = round_num;
 
             // TODO: Insert a way to wait x amount of seconds?
 
             // Create x amount of new asteroids corresponding with the round number.
-            for(int i = 0; i < rounds; i++)
+            for(int i = 0; i < round_num; i++)
             {
                 init_asteroid(&asteroids[i], ship, screen_width, screen_height);
             }
@@ -164,7 +165,7 @@ void update_game_state(ship *ship, struct asteroid *asteroid, arena *arena, floa
     else
     {
         ship->velocity = 0;
-        for(int i = 0; i < rounds; i++)
+        for(int i = 0; i < round_num; i++)
         {
             asteroids[i].velocity = 0;
             asteroids[i].turn_val = 0;
@@ -179,10 +180,10 @@ void on_idle()
     update_game_state(&ship_obj, asteroids, &arena_obj, dt);
 
     // Move the asteroids.
-    move_asteroid(asteroids, dt, rounds);
+    move_asteroid(asteroids, dt, round_num);
 
     // Rotate the asteroids around their center.
-    for(int i = 0; i < rounds; i++)
+    for(int i = 0; i < round_num; i++)
     {
         rotate_asteroid(&asteroids[i], asteroids[i].turn_val, dt);
     }
@@ -255,8 +256,8 @@ void reset_game()
 
 void init_game()
 {
-    rounds = 1;
-    temprounds = 1;
+    round_num = 1;
+    temp_round_num = 1;
 
     // Setting up the window.
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
@@ -288,7 +289,7 @@ void string_manager()
 {
     // Get the current round number and draw it.
     char round[10] = "Round: ";
-    round[6] = rounds % 10 + '0';
+    round[6] = round_num % 10 + '0';
     glColor3f(1,1,1);
     draw_string(screen_width * 0.05, screen_height * 0.975, round, screen_width, screen_height);
 
