@@ -13,6 +13,7 @@ typedef struct
     bool moving_forward;
     bool turning_left;
     bool turning_right;
+    bool restart_game;
 } key_handler;
 
 // Initialisation function.
@@ -43,5 +44,12 @@ void on_key_up(unsigned char key, int x, int y);
 
 // Glut mouse function.
 void on_mouse_press();
+
+// Retrieves the time since the game start.
+int get_time();
+
+void string_manager();
+
+void set_restart_time();
 
 #endif // GAME_INIT_H

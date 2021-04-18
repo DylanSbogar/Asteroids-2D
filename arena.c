@@ -159,3 +159,28 @@ bool ship_wall_collision(arena *arena, ship *ship)
         return false;
     }
 }
+
+void draw_string(float x, float y, char* string, int w, int h) 
+{
+    glDisable(GL_TEXTURE_2D);
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+    gluOrtho2D(0, w, 0, h);
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glLoadIdentity();
+    glRasterPos2i(x, y);
+    void* font = GLUT_BITMAP_9_BY_15;
+
+    for (char* c = string; *c != '\0'; c++) {
+        glColor3f(1.0, 0.0, 0.0);
+        glutBitmapCharacter(font, *c);
+    }
+
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+    glMatrixMode(GL_MODELVIEW);
+    glPopMatrix();
+    glEnable(GL_TEXTURE_2D);
+}

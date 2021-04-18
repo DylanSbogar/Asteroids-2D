@@ -7,7 +7,8 @@
 #define SHIP_HEIGHT 24
 #define SHIP_WIDTH  16
 
-#define SHIP_MOVE_SPEED 9
+#define SHIP_MIN_MOVE_SPEED 5
+#define SHIP_MAX_MOVE_SPEED 9
 #define SHIP_ROTATE_VELOCITY 5
 
 #define SHIP_COLLISION 1.125 // Multiplier for the collision radius

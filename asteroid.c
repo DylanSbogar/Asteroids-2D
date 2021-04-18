@@ -52,7 +52,6 @@ void init_asteroid(struct asteroid *asteroid, ship *ship, int w, int h)
 
     // Start asteroids as deactivated.
     asteroid->activated = false;
-    // printf("asteroid.size=%d\n",asteroid->size);
 }
 
 void draw_asteroid(struct asteroid *asteroid)
@@ -136,7 +135,6 @@ int checkActivated(struct asteroid *asteroid, int w, int h, int temp)
         {
             // Activate the asteroid, so we know to track its movements.
             asteroid->activated = true;
-            // printf("its in the ring baby\n");
         }
         // If the asteroid is activated
         if(asteroid->activated)

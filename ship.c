@@ -24,7 +24,7 @@ void init_ship(ship *ship, int w, int h)
     ship->pos.y = (h * 0.05) + (SHIP_NEARBY_RADIUS * 1.1);
 
     // Setting the velocity of the ship.
-    ship->velocity = SHIP_MOVE_SPEED;
+    ship->velocity = SHIP_MAX_MOVE_SPEED;
 
     // Set the coordinates for the ship's direction to face the upper-right corner of the screen.
     vector2d direction;

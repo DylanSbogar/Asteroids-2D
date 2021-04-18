@@ -25,4 +25,6 @@ void ship_wall_warning(arena *arena, ship *ship);
 
 bool ship_wall_collision(arena *arena, ship *ship);
 
+void draw_string(float x, float y, char* string, int w, int h);
+
 #endif // ARENA_H
