@@ -97,7 +97,6 @@ void update_game_state(ship *ship, struct asteroid *asteroid, arena *arena, floa
     {
         if(kh_obj.moving_forward)
         {
-            launch_particle(&ship_obj);
             move_ship(ship, dt);
         }
         if(kh_obj.turning_left)
