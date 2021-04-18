@@ -16,7 +16,7 @@
 #define SHIP_COLLISION_RADIUS SHIP_COLLISION * SHIP_HEIGHT
 #define SHIP_NEARBY_RADIUS SHIP_NEARBY * SHIP_HEIGHT
 
-#define MAX_PARTICLES 1000
+#define MAX_PARTICLES 25
 #define PARTICLE_START_SIZE 7
 #define PARTICLE_LIFESPAN 100
 #define PARTICLE_VELOCITY 2
@@ -60,7 +60,5 @@ void init_particle(particle* particle, ship* ship);
 void draw_particle(particle* particle);
 
 void move_particle(particle* particle, ship* ship, float dt);
-
-void scale_particle(particle* particle);
 
 #endif // SHIP_H

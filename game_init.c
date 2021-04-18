@@ -36,6 +36,8 @@ ship ship_obj;
 particle particles[MAX_PARTICLES];
 asteroid asteroids[MAX_ASTEROIDS];
 
+int particle_count = 0;
+
 void on_reshape(int w, int h)
 {
     glViewport(0, 0, w, h);
@@ -70,7 +72,10 @@ void on_display()
     
     for(int j = 0; j < MAX_PARTICLES; j++)
     {
-        draw_particle(&particles[j]);
+        if(particles[j].size > 0)
+        {
+            draw_particle(&particles[j]);
+        }
     }
 
     // Draw the various game elements.
@@ -100,7 +105,13 @@ void update_game_state(ship *ship, asteroid *asteroid, arena *arena, float dt)
         if(kh_obj.moving_forward)
         {
             move_ship(ship, dt);
-            init_particle(particles, &ship_obj);
+            init_particle(&particles[particle_count], &ship_obj);
+            particle_count++;
+
+            if(particle_count == MAX_PARTICLES -1)
+            {
+                particle_count = 0;
+            }
         }
         if(kh_obj.turning_left)
         {
@@ -184,6 +195,14 @@ void on_idle()
     for(int i = 0; i < MAX_PARTICLES; i++)
     {
         move_particle(&particles[i], &ship_obj, dt);
+        particles[i].size -= (PARTICLE_START_SIZE * 0.05);
+
+        if(&particles[i].size <= 0)
+        {
+            particles[i].activated = false;
+            particle_count--;
+        }
+        // scale_particle
     }
 
     // Move the asteroids.

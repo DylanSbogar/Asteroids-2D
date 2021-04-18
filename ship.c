@@ -136,6 +136,8 @@ void init_particle(particle* particle, ship* ship)
     particle->fill_r = 1.0;
     particle->fill_g = 1.0;
     particle->fill_b = 1.0;
+
+    particle->activated = true;
 }
 
 void draw_particle(particle* particle)
@@ -184,9 +186,4 @@ void move_particle(particle* particle, ship* ship, float dt)
     // then set that as the ships current postiion.
     particle->pos.x = particle->pos.x + result.x;
     particle->pos.y = particle->pos.y + result.y;
-}
-
-void scale_particle(particle* particle)
-{
-
 }
