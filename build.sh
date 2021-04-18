@@ -1,1 +1,1 @@
-clang *.c -Wno-deprecated-declarations -framework GLUT -framework OpenGL -framework Carbon -o ass1; ./ass1
+clang *.c -Wno-deprecated-declarations -framework GLUT -framework OpenGL -framework Carbon -o ass1; ./ass1;
