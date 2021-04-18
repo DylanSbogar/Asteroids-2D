@@ -28,18 +28,23 @@ void init_asteroid(struct asteroid *asteroid, ship *ship, int w, int h)
     // Set the angle of the asteroid.
     asteroid->angle = 90;
 
+    // Set the rotation direction of the asteroid, either clockwise or anti-clockwise.
     asteroid->turn_val = rand() % (1 + 1 - -1) + -1;;
 
+    // If the rand() returns 0 for the turn_val above, set it to -1.
     if(asteroid->turn_val == 0)
     {
         asteroid->turn_val = -1;
     }
 
     // Set the size of the asteroid.
-    asteroid->size = rand() % (ASTEROID_MAX_SPEED + 1 - ASTEROID_MIN_SPEED) + ASTEROID_MIN_SPEED;
+    asteroid->size = rand() % (ASTEROID_MAX_SIZE + 1 - ASTEROID_MIN_SIZE) + ASTEROID_MIN_SIZE;
 
     // Set the velocity of the asteroid.
     asteroid->velocity = (rand() % (20 + 1 - 10) + 10);
+
+    // Set the rotation velocity of the asteroid.
+    asteroid->rotate_velocity = (rand() % (ASTEROID_ROTATE_MAX_SPEED + 1 - ASTEROID_ROTATE_MIN_SPEED) + ASTEROID_ROTATE_MIN_SPEED);
 
     // 2.1. Launch Position
     // Define a random position around the arena for an asteroid to spawn at.
@@ -62,12 +67,15 @@ void init_asteroid(struct asteroid *asteroid, ship *ship, int w, int h)
 
     // Start asteroids as deactivated.
     asteroid->activated = false;
+
+    for(int i = 0; i < ASTEROID_POINTS; i++)
+    {
+        asteroid->points[i] = (rand() % (ASTEROID_MAX_SIZE + 1 - ASTEROID_MIN_SIZE) + ASTEROID_MIN_SIZE);
+    }
 }
 
 void draw_asteroid(struct asteroid *asteroid)
 {
-    // Convert the direction unit vector to degrees.
-    // float angle = convert_to_angle(asteroid->dir.x, asteroid->dir.y) - 90;
     float x, y;
     float theta;
 
@@ -80,11 +88,12 @@ void draw_asteroid(struct asteroid *asteroid)
     glColor3f(asteroid->outline_r, asteroid->outline_g, asteroid->outline_b);
     glBegin(GL_LINE_LOOP);
 
-    for(int i = 0; i < 4; i++)
+
+    for(int i = 0; i < ASTEROID_POINTS; i++)
     {
-        theta = i / (float)4 * 2.0 * M_PI;
-        x = asteroid->size * cosf(theta);
-        y = asteroid->size * sinf(theta);
+        theta = i / (float)ASTEROID_POINTS * 2.0 * M_PI;
+        x = asteroid->points[i] * cosf(theta);
+        y = asteroid->points[i] * sinf(theta);
         glVertex2f(x, y);
     }
     glEnd();
@@ -108,7 +117,7 @@ void move_asteroid(struct asteroid *asteroid, float dt, int round)
 void rotate_asteroid(struct asteroid *asteroid, int turn_val, float dt)
 {
     // Increment/Decrement the angle depending on whether the player is turning left/right.
-    asteroid->angle += turn_val * SHIP_ROTATE_VELOCITY;
+    asteroid->angle += turn_val * asteroid->rotate_velocity;
 }
 
 bool ship_asteroid_collision(struct asteroid *asteroid, ship *ship)

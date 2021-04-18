@@ -167,6 +167,7 @@ void update_game_state(ship *ship, struct asteroid *asteroid, arena *arena, floa
         for(int i = 0; i < rounds; i++)
         {
             asteroids[i].velocity = 0;
+            asteroids[i].turn_val = 0;
         }
     }
 }
@@ -176,11 +177,16 @@ void on_idle()
     cur_time = glutGet(GLUT_ELAPSED_TIME) / 1000.0;
     float dt = cur_time - g_last_time;
     update_game_state(&ship_obj, asteroids, &arena_obj, dt);
+
+    // Move the asteroids.
     move_asteroid(asteroids, dt, rounds);
+
+    // Rotate the asteroids around their center.
     for(int i = 0; i < rounds; i++)
     {
         rotate_asteroid(&asteroids[i], asteroids[i].turn_val, dt);
     }
+
     g_last_time = cur_time;
     glutPostRedisplay();
 }
