@@ -34,7 +34,7 @@ void ship_wall_warning();
 // Recalls the init_game method, starting the game anew.
 void reset_game();
 
-void update_game_state(ship *ship, struct asteroid *asteroid, arena *arena, float dt);
+void update_game_state(ship *ship, asteroid *asteroid, arena *arena, float dt);
 
 // Glut keyboard function.
 void on_key_press(unsigned char key, int x, int y);

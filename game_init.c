@@ -34,7 +34,7 @@ key_handler kh_obj;
 arena arena_obj;
 ship ship_obj;
 particle particles[MAX_PARTICLES];
-struct asteroid asteroids[MAX_ASTEROIDS];
+asteroid asteroids[MAX_ASTEROIDS];
 
 void on_reshape(int w, int h)
 {
@@ -54,6 +54,7 @@ void on_reshape(int w, int h)
     // Initialise the various game elements.
     init_ship(&ship_obj, screen_width, screen_height);
     init_arena(&arena_obj, screen_width, screen_height);
+
     for(int i = 0; i < round_num; i++)
     {
         init_asteroid(&asteroids[i], &ship_obj, screen_width, screen_height);
@@ -66,9 +67,15 @@ void on_display()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+    
+    for(int j = 0; j < MAX_PARTICLES; j++)
+    {
+        draw_particle(&particles[j]);
+    }
 
     // Draw the various game elements.
     draw_ship(&ship_obj);
+    
     draw_arena(&arena_obj);
     for(int i = 0; i < round_num; i++)
     {
@@ -76,11 +83,6 @@ void on_display()
     }
 
     string_manager();
-
-    if(game_over)
-    {
-        draw_string(screen_width * 0.5, screen_height/2, "GAME OVER", screen_width, screen_height);
-    }
 
     // Check for and print out any errors.
     int err;
@@ -91,13 +93,14 @@ void on_display()
     glutSwapBuffers();
 }
 
-void update_game_state(ship *ship, struct asteroid *asteroid, arena *arena, float dt)
+void update_game_state(ship *ship, asteroid *asteroid, arena *arena, float dt)
 {
     if(!game_over)
     {
         if(kh_obj.moving_forward)
         {
             move_ship(ship, dt);
+            init_particle(particles, &ship_obj);
         }
         if(kh_obj.turning_left)
         {
@@ -174,9 +177,14 @@ void update_game_state(ship *ship, struct asteroid *asteroid, arena *arena, floa
 
 void on_idle()
 {
-    cur_time = glutGet(GLUT_ELAPSED_TIME) / 1000.0;
+    cur_time = glutGet(GLUT_ELAPSED_TIME);
     float dt = cur_time - g_last_time;
     update_game_state(&ship_obj, asteroids, &arena_obj, dt);
+
+    for(int i = 0; i < MAX_PARTICLES; i++)
+    {
+        move_particle(&particles[i], &ship_obj, dt);
+    }
 
     // Move the asteroids.
     move_asteroid(asteroids, dt, round_num);
@@ -193,7 +201,7 @@ void on_idle()
 
 void on_key_press(unsigned char key, int x, int y)
 {
-    float dt = glutGet(GLUT_ELAPSED_TIME) / 1000.0 - g_last_time;
+    float dt = glutGet(GLUT_ELAPSED_TIME) - g_last_time;
 
     switch(toupper(key))
     {  
@@ -300,6 +308,12 @@ void string_manager()
     time[8] = cur_time % 10 + '0';
     glColor3f(1,1,1);
     draw_string(screen_width * 0.9, screen_height * 0.975, time, screen_width, screen_height);
+
+    if(game_over)
+    {
+        draw_string(screen_width * 0.375, screen_height * 0.975, "GAME OVER - Hold 'R' to restart.", screen_width, screen_height);
+    }
+
 }
 
 void set_restart_time()

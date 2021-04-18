@@ -18,7 +18,7 @@
 #endif
 
 // Initialises the  asteroids
-void init_asteroid(struct asteroid *asteroid, ship *ship, int w, int h)
+void init_asteroid(asteroid *asteroid, ship *ship, int w, int h)
 {
     // Set the color of the asteroids.
     asteroid->outline_r = 1;
@@ -75,7 +75,7 @@ void init_asteroid(struct asteroid *asteroid, ship *ship, int w, int h)
     }
 }
 
-void draw_asteroid(struct asteroid *asteroid)
+void draw_asteroid(asteroid *asteroid)
 {
     float x, y;
     float theta;
@@ -103,7 +103,7 @@ void draw_asteroid(struct asteroid *asteroid)
     glPopMatrix();
 }
 
-void move_asteroid(struct asteroid *asteroid, float dt, int round)
+void move_asteroid(asteroid *asteroid, float dt, int round)
 {
     for(int i = 0; i < round; i++)
     {
@@ -117,13 +117,13 @@ void move_asteroid(struct asteroid *asteroid, float dt, int round)
     }
 }
 
-void rotate_asteroid(struct asteroid *asteroid, int turn_val, float dt)
+void rotate_asteroid(asteroid *asteroid, int turn_val, float dt)
 {
     // Increment/Decrement the angle depending on whether the player is turning left/right.
     asteroid->angle += turn_val * asteroid->rotate_velocity;
 }
 
-bool ship_asteroid_collision(struct asteroid *asteroid, ship *ship)
+bool ship_asteroid_collision(asteroid *asteroid, ship *ship)
 {
     float length = 0;
     vector2d new_vec = direction_between_points(asteroid->pos, ship->pos);
@@ -140,7 +140,7 @@ bool ship_asteroid_collision(struct asteroid *asteroid, ship *ship)
     }
 }
 
-int checkActivated(struct asteroid *asteroid, int w, int h, int num_detected)
+int checkActivated(asteroid *asteroid, int w, int h, int num_detected)
 {
         // If the asteroid is on-screen.
         if((asteroid->pos.x <= w && asteroid->pos.x >= 0) && (asteroid->pos.y <=h && asteroid->pos.y >= 0))

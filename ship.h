@@ -8,16 +8,16 @@
 #define SHIP_WIDTH  16
 
 #define SHIP_MIN_MOVE_SPEED 5
-#define SHIP_MAX_MOVE_SPEED 9
-#define SHIP_ROTATE_VELOCITY 5
+#define SHIP_MAX_MOVE_SPEED 5
+#define SHIP_ROTATE_VELOCITY 0.25
 
 #define SHIP_COLLISION 1.125 // Multiplier for the collision radius
 #define SHIP_NEARBY 5 // Multiplier for the nearby radius
 #define SHIP_COLLISION_RADIUS SHIP_COLLISION * SHIP_HEIGHT
 #define SHIP_NEARBY_RADIUS SHIP_NEARBY * SHIP_HEIGHT
 
-#define MAX_PARTICLES 100
-#define PARTICLE_START_SIZE 10
+#define MAX_PARTICLES 1000
+#define PARTICLE_START_SIZE 7
 #define PARTICLE_LIFESPAN 100
 #define PARTICLE_VELOCITY 2
 #define PARTICLE_FREQ 10
@@ -37,9 +37,8 @@ typedef struct
     vector2d pos; // Vector representing the particle's co-ordinates.
     vector2d dir; // Unit vector representing direction of the vector.
     float velocity; // Velocity of the particle.
-    float radius;
+    float size;
     int lifespan; // Lifespan of the particle.
-    float size; // Radius of the particle.
     float fill_r, fill_g, fill_b; // Fill colour
     bool activated;
 } particle;
@@ -55,5 +54,13 @@ void move_ship(ship* ship, float dt);
 
 // Rotates the ship.
 void rotate_ship(ship* ship, int turn_val, float dt);
+
+void init_particle(particle* particle, ship* ship);
+
+void draw_particle(particle* particle);
+
+void move_particle(particle* particle, ship* ship, float dt);
+
+void scale_particle(particle* particle);
 
 #endif // SHIP_H

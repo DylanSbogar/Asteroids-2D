@@ -94,7 +94,7 @@ void rotate_ship(ship* ship, int turn_val, float dt)
     float new_angle = convert_to_angle(ship->dir.x, ship->dir.y);
 
     // Increment/Decrement the angle depending on whether the player is turning left/right.
-    new_angle += turn_val * SHIP_ROTATE_VELOCITY;
+    new_angle += (turn_val * (SHIP_ROTATE_VELOCITY)) * dt;
 
     // Convert the angle back to radians for functions.
     float new_angle_rad = DEG_TO_RAD(new_angle);
@@ -109,11 +109,84 @@ void move_ship(ship* ship, float dt)
     vector2d result;
 
     // Multiply the ships direction vector by the ships velocity.
-    result.x = ship->dir.x * ship->velocity;
-    result.y = ship->dir.y * ship->velocity;
+    result.x = ship->dir.x * (ship->velocity / 10);
+    result.y = ship->dir.y * (ship->velocity / 10);
+
+    result.x *= dt;
+    result.y *= dt;
 
     // Add the resultant vector with the ships corrent position vector,
     // then set that as the ships current postiion.
     ship->pos.x = ship->pos.x + result.x;
     ship->pos.y = ship->pos.y + result.y;
+}
+
+void init_particle(particle* particle, ship* ship)
+{
+    particle->pos.x = ship->pos.x;
+    particle->pos.y = ship->pos.y;
+
+    particle->dir.x = -ship->dir.x;
+    particle->dir.y = -ship->dir.y;
+
+    particle->velocity = PARTICLE_VELOCITY;
+    particle->size = PARTICLE_START_SIZE;
+    particle->lifespan = PARTICLE_LIFESPAN;
+
+    particle->fill_r = 1.0;
+    particle->fill_g = 1.0;
+    particle->fill_b = 1.0;
+}
+
+void draw_particle(particle* particle)
+{
+    float x, y;
+    float theta;
+
+    // Convert the direction unit vector to degrees.
+    float angle = convert_to_angle(particle->dir.x, particle->dir.y) - 90;
+
+    glMatrixMode(GL_MODELVIEW);
+
+    glPushMatrix();
+    glTranslatef(particle->pos.x, particle->pos.y, 0);
+    // Rotate by the angle parameter, which has zero effect on the direction its moving.
+    glRotatef(angle, 0.0, 0.0, 1.0);
+
+    // Apply the custom color.
+    glColor3f(particle->fill_r, particle->fill_g, particle->fill_b);
+    glBegin(GL_LINE_LOOP);
+
+    // Draw the asteroid using the random points.
+    for(int i = 0; i < 16; i++)
+    {
+        theta = i / (float)16 * 2.0 * M_PI;
+        x = particle->size * cosf(theta);
+        y = particle->size * sinf(theta);
+        glVertex2f(x, y);
+    }
+    glEnd();
+    glPopMatrix();
+}
+
+void move_particle(particle* particle, ship* ship, float dt)
+{
+    vector2d result;
+
+    // Multiply the ships direction vector by the ships velocity.
+    result.x = particle->dir.x * (particle->velocity / 10);
+    result.y = particle->dir.y * (particle->velocity / 10);
+
+    result.x *= dt;
+    result.y *= dt;
+
+    // Add the resultant vector with the ships corrent position vector,
+    // then set that as the ships current postiion.
+    particle->pos.x = particle->pos.x + result.x;
+    particle->pos.y = particle->pos.y + result.y;
+}
+
+void scale_particle(particle* particle)
+{
+
 }

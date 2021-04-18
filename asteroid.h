@@ -15,7 +15,7 @@
 #include "game_math.h"
 #include "ship.h"
 
-struct asteroid {
+typedef struct {
     float outline_r,outline_g,outline_b; // Colour code for the asteroid.
     int starting_pos; // Starting point from the outer circle. (between 1 and 360).
     float angle;
@@ -27,18 +27,18 @@ struct asteroid {
     float rotate_velocity;
     bool activated; // Is true when the asteroid is on screen.
     float points[ASTEROID_POINTS];
-};
+} asteroid;
 
-void init_asteroid(struct asteroid *asteroid, ship *ship, int w, int h);
+void init_asteroid(asteroid *asteroid, ship *ship, int w, int h);
 
-void draw_asteroid(struct asteroid *asteroid);
+void draw_asteroid(asteroid *asteroid);
 
-void move_asteroid(struct asteroid *asteroid, float dt, int round);
+void move_asteroid(asteroid *asteroid, float dt, int round);
 
-void rotate_asteroid(struct asteroid *asteroid, int turn_val, float dt);
+void rotate_asteroid(asteroid *asteroid, int turn_val, float dt);
 
-bool ship_asteroid_collision(struct asteroid *asteroid, ship *ship);
+bool ship_asteroid_collision(asteroid *asteroid, ship *ship);
 
-int checkActivated(struct asteroid *asteroid, int w, int h, int num_detected);
+int checkActivated(asteroid *asteroid, int w, int h, int num_detected);
 
 #endif // ASTEROID_H
