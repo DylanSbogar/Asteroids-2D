@@ -85,19 +85,6 @@ void draw_ship(ship *ship)
         glVertex2f(0 + SHIP_WIDTH, 0 - SHIP_HEIGHT);
         glVertex2f(0, 0 + SHIP_HEIGHT);
     glEnd();
-
-    float theta;
-
-    // Draw the ship collision bubble (will remove later)
-    glColor3f(1, 0, 1);
-    glBegin(GL_LINE_LOOP);
-        for(int i = 0; i < 360; i++)
-        {
-            theta = DEG_TO_RAD(i); 
-            glVertex2f(SHIP_COLLISION_RADIUS * cos(theta), SHIP_COLLISION_RADIUS *  sin(theta));
-        }
-    glEnd();
-
     glPopMatrix();
 }
 
