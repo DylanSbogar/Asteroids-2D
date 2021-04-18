@@ -317,6 +317,10 @@ void string_manager()
     // If the user is starting a new game, print the appropriate string.
     if(!start_game)
     {
+        for(int i = 0; i < round_num; i++)
+        {
+            asteroids[i].velocity = 0;
+        }
         draw_string(screen_width * 0.375, screen_height * 0.975, "ASTEROIDS - Press 'R' to start.", screen_width, screen_height);
     }
 
