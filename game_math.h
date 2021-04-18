@@ -21,17 +21,20 @@ typedef struct
     double y; // Y co-ordinate of the object.
 } vector2d;
 
+// Converts given x and y coords from a unit vector to an angle in degrees.
 static inline float convert_to_angle(float x, float y)
 {
     float angle_rad = atan2(y, x);
     return RAD_TO_DEG(angle_rad);
 }
 
+// Performs pythagoras' theorem on 2 given numbers.
 static inline float pythagoras(float x, float y)
 {
     return sqrt(pow(x,2) + pow(y,2));
 }
 
+// Returns the directional vector between 2 given points.
 static inline vector2d direction_between_points(vector2d source, vector2d target)
 {
     vector2d result;
@@ -42,6 +45,7 @@ static inline vector2d direction_between_points(vector2d source, vector2d target
     return result;
 }
 
+// Performs scalar multiplication on a vector by value 's'.
 static inline vector2d vector2d_scalar_mult(vector2d *vec, float s)
 {
     vec->x = vec->x * s; // Multiply the x co-ordinate by the scalar s
@@ -50,6 +54,7 @@ static inline vector2d vector2d_scalar_mult(vector2d *vec, float s)
     return *vec; // Return the updated vector.
 }
 
+// Performs addition with 2 given vectors.
 static inline vector2d vector2d_addition(vector2d *vec, vector2d *vec2)
 {
     vector2d result; // Instantiate a new vector to return since we dont want to update the existing one.

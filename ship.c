@@ -123,21 +123,23 @@ void move_ship(ship* ship, float dt)
 
 void init_particle(particle* particle, ship* ship)
 {
+    // Set the particles position to the center of the ship.
     particle->pos.x = ship->pos.x;
     particle->pos.y = ship->pos.y;
 
+    // Set the unit vector representing the particle's direction
+    // To that being inverse of the ship's current direction.
     particle->dir.x = -ship->dir.x;
     particle->dir.y = -ship->dir.y;
 
+    // Set the velocity and size of the particle.
     particle->velocity = PARTICLE_VELOCITY;
-    particle->size = PARTICLE_START_SIZE;
-    particle->lifespan = PARTICLE_LIFESPAN;
+    particle->size = PARTICLE_INIT_SIZE;
 
+    // Set the colors of the particles.
     particle->fill_r = 1.0;
     particle->fill_g = 1.0;
     particle->fill_b = 1.0;
-
-    particle->activated = true;
 }
 
 void draw_particle(particle* particle)

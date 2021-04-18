@@ -48,8 +48,10 @@ void on_mouse_press();
 // Retrieves the time since the game start.
 int get_time();
 
+// Controls each of the text portions that need to be drawn.
 void string_manager();
 
+// Resets the clock for a new game.
 void set_restart_time();
 
 #endif // GAME_INIT_H

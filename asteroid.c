@@ -142,32 +142,30 @@ bool ship_asteroid_collision(asteroid *asteroid, ship *ship)
 
 int checkActivated(asteroid *asteroid, int w, int h, int num_detected)
 {
-        // If the asteroid is on-screen.
-        if((asteroid->pos.x <= w && asteroid->pos.x >= 0) && (asteroid->pos.y <=h && asteroid->pos.y >= 0))
-        {
-            // Activate the asteroid, so we know to track its movements.
-            asteroid->activated = true;
-        }
-        // If the asteroid is activated
-        if(asteroid->activated)
-        {
-            // Check if the asteroid is to the right of left of the screen respectively.
-            if(w <= asteroid->pos.x || 0 >= asteroid->pos.x)
-            {
-                // asteroid->velocity = 0;
-                asteroid->activated = false;
-                num_detected--;
-                return num_detected;
-            }
-            // Check if the asteroid is above or below the screen respectively.
-            if(h <= asteroid->pos.y || 0 >= asteroid->pos.y)
-            {
-                // asteroid->velocity = 0;
-                asteroid->activated = false;
-                num_detected--;
-                return num_detected;
-            }
-        }
-
+    // If the asteroid is on-screen.
+    if((asteroid->pos.x <= w && asteroid->pos.x >= 0) && (asteroid->pos.y <=h && asteroid->pos.y >= 0))
+    {
+        // Activate the asteroid, so we know to track its movements.
+        asteroid->activated = true;
+    }
+    // If the asteroid is activated
+    if(asteroid->activated)
+    {
+    // Check if the asteroid is to the right of left of the screen respectively.
+    if(w <= asteroid->pos.x || 0 >= asteroid->pos.x)
+    {
+        asteroid->activated = false;
+        num_detected--;
         return num_detected;
+    }
+    // Check if the asteroid is above or below the screen respectively.
+    if(h <= asteroid->pos.y || 0 >= asteroid->pos.y)
+    {
+        asteroid->activated = false;
+        num_detected--;
+        return num_detected;
+        }
+    }
+
+    return num_detected;
 }

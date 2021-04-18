@@ -73,6 +73,7 @@ void on_display()
     
     for(int j = 0; j < MAX_PARTICLES; j++)
     {
+        // Only draw particles which have a size greater than 0, and are visible.
         if(particles[j].size > 0)
         {
             draw_particle(&particles[j]);
@@ -81,13 +82,13 @@ void on_display()
 
     // Draw the various game elements.
     draw_ship(&ship_obj);
-    
     draw_arena(&arena_obj);
     for(int i = 0; i < round_num; i++)
     {
         draw_asteroid(&asteroids[i]);
     }
 
+    // Responsible for drawing strings such as the current round and timer, etc.
     string_manager();
 
     // Check for and print out any errors.
@@ -109,6 +110,8 @@ void update_game_state(ship *ship, asteroid *asteroid, arena *arena, float dt)
             init_particle(&particles[particle_count], &ship_obj);
             particle_count++;
 
+            // If the maximum number of particles are drawn, loop back to the start.
+            // Therefore overriding the first particle at the back of the trail.
             if(particle_count == MAX_PARTICLES -1)
             {
                 particle_count = 0;
@@ -139,21 +142,13 @@ void update_game_state(ship *ship, asteroid *asteroid, arena *arena, float dt)
 
         for(int i = 0; i < round_num; i++)
         {
-            // Rotate the asteroid in its given direction.
-            // rotate_asteroid(&asteroid[i].rotate_dir)
-
             // If an asteroid collides with the ship
             if(ship_asteroid_collision(&asteroids[i], ship))
             {
                 // Start the game over again.
                 game_over = true;
             }
-        }
 
-        // For each asteroid in the round
-        for(int i = 0; i < round_num; i++)
-        {
-            // Return an int representing how many asteroids are 'active' on the field.
             temp_round_num = checkActivated(&asteroids[i], screen_width, screen_height, temp_round_num);
         }
 
@@ -173,15 +168,6 @@ void update_game_state(ship *ship, asteroid *asteroid, arena *arena, float dt)
             }
         }
     }
-    else
-    {
-        ship->velocity = 0;
-        for(int i = 0; i < round_num; i++)
-        {
-            asteroids[i].velocity = 0;
-            asteroids[i].turn_val = 0;
-        }
-    }
 }
 
 void on_idle()
@@ -193,14 +179,7 @@ void on_idle()
     for(int i = 0; i < MAX_PARTICLES; i++)
     {
         move_particle(&particles[i], &ship_obj, dt);
-        particles[i].size -= (PARTICLE_START_SIZE * 0.1);
-
-        if(&particles[i].size <= 0)
-        {
-            particles[i].activated = false;
-            particle_count--;
-        }
-        // scale_particle
+        particles[i].size -= (PARTICLE_INIT_SIZE * 0.1);
     }
 
     // Move the asteroids.
@@ -270,11 +249,6 @@ void on_key_up(unsigned char key, int x, int y)
     }
 }
 
-// void on_mouse_press()
-// {
-
-// }
-
 void reset_game()
 {
     init_game();
@@ -293,12 +267,12 @@ void init_game()
     kh_obj.moving_forward = false;
     kh_obj.turning_left = false;
     kh_obj.turning_right = false;
+    kh_obj.restart_game = false;
 
     // Various glut functions for gameplay.
     glutReshapeFunc(on_reshape);
     glutKeyboardFunc(on_key_press);
     glutKeyboardUpFunc(on_key_up);
-    // glutMouseFunc(on_mouse_press);
     glutDisplayFunc(on_display);
     glutIdleFunc(on_idle);
 
@@ -309,6 +283,13 @@ void init_game()
 int get_time()
 {
     return (glutGet(GLUT_ELAPSED_TIME) / 1000) - time_on_death;
+}
+
+// Reset the timer for when the user starts a new game, by minusing the 
+// current time on the timer to achieve 0.
+void set_restart_time()
+{
+    time_on_death += get_time();
 }
 
 void string_manager()
@@ -328,19 +309,15 @@ void string_manager()
     glColor3f(1,1,1);
     draw_string(screen_width * 0.9, screen_height * 0.975, time, screen_width, screen_height);
 
+    // If the game is over, print the appropriate string.
     if(game_over)
     {
-        draw_string(screen_width * 0.375, screen_height * 0.975, "GAME OVER - Hold 'R' to restart.", screen_width, screen_height);
+        draw_string(screen_width * 0.375, screen_height * 0.975, "GAME OVER - Press 'R' to restart.", screen_width, screen_height);
     }
+    // If the user is starting a new game, print the appropriate string.
     if(!start_game)
     {
-        draw_string(screen_width * 0.375, screen_height * 0.975, "ASTEROIDS - Hold 'R' to start.", screen_width, screen_height);
+        draw_string(screen_width * 0.375, screen_height * 0.975, "ASTEROIDS - Press 'R' to start.", screen_width, screen_height);
     }
 
 }
-
-void set_restart_time()
-{
-    time_on_death += get_time();
-}
-

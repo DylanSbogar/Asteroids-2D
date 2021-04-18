@@ -17,10 +17,8 @@
 #define SHIP_NEARBY_RADIUS SHIP_NEARBY * SHIP_HEIGHT
 
 #define MAX_PARTICLES 25
-#define PARTICLE_START_SIZE 7
-#define PARTICLE_LIFESPAN 100
+#define PARTICLE_INIT_SIZE 7
 #define PARTICLE_VELOCITY 2
-#define PARTICLE_FREQ 10
 
 
 typedef struct
@@ -37,10 +35,8 @@ typedef struct
     vector2d pos; // Vector representing the particle's co-ordinates.
     vector2d dir; // Unit vector representing direction of the vector.
     float velocity; // Velocity of the particle.
-    float size;
-    int lifespan; // Lifespan of the particle.
+    float size; // Size of the particle
     float fill_r, fill_g, fill_b; // Fill colour
-    bool activated;
 } particle;
 
 // Draws the ship.
@@ -55,10 +51,13 @@ void move_ship(ship* ship, float dt);
 // Rotates the ship.
 void rotate_ship(ship* ship, int turn_val, float dt);
 
+// Initialises the particle.
 void init_particle(particle* particle, ship* ship);
 
+// Draws the particle.
 void draw_particle(particle* particle);
 
+// Moves the particle.
 void move_particle(particle* particle, ship* ship, float dt);
 
 #endif // SHIP_H
