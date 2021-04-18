@@ -21,6 +21,7 @@
 int round_num = 0;
 int temp_round_num = 0;
 bool game_over = false;
+bool start_game = false;
 
 int cur_time = 0;
 int time_on_death = 0;
@@ -100,7 +101,7 @@ void on_display()
 
 void update_game_state(ship *ship, asteroid *asteroid, arena *arena, float dt)
 {
-    if(!game_over)
+    if(!game_over && start_game)
     {
         if(kh_obj.moving_forward)
         {
@@ -133,8 +134,6 @@ void update_game_state(ship *ship, asteroid *asteroid, arena *arena, float dt)
         // Check to see whether the ship has collided with the wall.
         if(ship_wall_collision(arena, ship))
         {
-            // reset_game();
-            
             game_over = true;
         }
 
@@ -147,7 +146,6 @@ void update_game_state(ship *ship, asteroid *asteroid, arena *arena, float dt)
             if(ship_asteroid_collision(&asteroids[i], ship))
             {
                 // Start the game over again.
-                // reset_game();
                 game_over = true;
             }
         }
@@ -195,7 +193,7 @@ void on_idle()
     for(int i = 0; i < MAX_PARTICLES; i++)
     {
         move_particle(&particles[i], &ship_obj, dt);
-        particles[i].size -= (PARTICLE_START_SIZE * 0.05);
+        particles[i].size -= (PARTICLE_START_SIZE * 0.1);
 
         if(&particles[i].size <= 0)
         {
@@ -246,6 +244,7 @@ void on_key_press(unsigned char key, int x, int y)
         case 'R':
         // Restart the game.
             game_over = false;
+            start_game = true;
             kh_obj.restart_game = true;
             break;
     }
@@ -266,6 +265,7 @@ void on_key_up(unsigned char key, int x, int y)
         break;
         case 'R':
         game_over = false;
+        start_game = true;
         kh_obj.restart_game = false;
     }
 }
@@ -331,6 +331,10 @@ void string_manager()
     if(game_over)
     {
         draw_string(screen_width * 0.375, screen_height * 0.975, "GAME OVER - Hold 'R' to restart.", screen_width, screen_height);
+    }
+    if(!start_game)
+    {
+        draw_string(screen_width * 0.375, screen_height * 0.975, "ASTEROIDS - Hold 'R' to start.", screen_width, screen_height);
     }
 
 }
