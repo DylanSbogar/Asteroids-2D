@@ -25,6 +25,16 @@ void init_asteroid(struct asteroid *asteroid, ship *ship, int w, int h)
     asteroid->outline_g = 1;
     asteroid->outline_b = 1;
 
+    // Set the angle of the asteroid.
+    asteroid->angle = 90;
+
+    asteroid->turn_val = rand() % (1 + 1 - -1) + -1;;
+
+    if(asteroid->turn_val == 0)
+    {
+        asteroid->turn_val = -1;
+    }
+
     // Set the size of the asteroid.
     asteroid->size = rand() % (ASTEROID_MAX_SPEED + 1 - ASTEROID_MIN_SPEED) + ASTEROID_MIN_SPEED;
 
@@ -57,7 +67,7 @@ void init_asteroid(struct asteroid *asteroid, ship *ship, int w, int h)
 void draw_asteroid(struct asteroid *asteroid)
 {
     // Convert the direction unit vector to degrees.
-    float angle = convert_to_angle(asteroid->dir.x, asteroid->dir.y) - 90;
+    // float angle = convert_to_angle(asteroid->dir.x, asteroid->dir.y) - 90;
     float x, y;
     float theta;
 
@@ -65,14 +75,14 @@ void draw_asteroid(struct asteroid *asteroid)
 
     glPushMatrix();
     glTranslatef(asteroid->pos.x, asteroid->pos.y, 0);
-    glRotatef(angle, 0.0, 0.0, 1.0);
+    glRotatef(asteroid->angle, 0.0, 0.0, 1.0);
 
     glColor3f(asteroid->outline_r, asteroid->outline_g, asteroid->outline_b);
     glBegin(GL_LINE_LOOP);
 
-    for(int i = 0; i < ASTEROID_POINTS; i++)
+    for(int i = 0; i < 4; i++)
     {
-        theta = i / (float)ASTEROID_POINTS * 2.0 * M_PI;
+        theta = i / (float)4 * 2.0 * M_PI;
         x = asteroid->size * cosf(theta);
         y = asteroid->size * sinf(theta);
         glVertex2f(x, y);
@@ -97,18 +107,8 @@ void move_asteroid(struct asteroid *asteroid, float dt, int round)
 
 void rotate_asteroid(struct asteroid *asteroid, int turn_val, float dt)
 {
-    // Convert the unit vector into an angle in degrees.
-    float new_angle = convert_to_angle(asteroid->dir.x, asteroid->dir.y);
-
     // Increment/Decrement the angle depending on whether the player is turning left/right.
-    new_angle += turn_val * SHIP_ROTATE_VELOCITY;
-
-    // Convert the angle back to radians for functions.
-    float new_angle_rad = DEG_TO_RAD(new_angle);
-
-    // Update the co-ordinates of the unit vector.
-    asteroid->dir.x = cos(new_angle_rad);
-    asteroid->dir.y = sin(new_angle_rad);
+    asteroid->angle += turn_val * SHIP_ROTATE_VELOCITY;
 }
 
 bool ship_asteroid_collision(struct asteroid *asteroid, ship *ship)

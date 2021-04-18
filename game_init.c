@@ -177,6 +177,10 @@ void on_idle()
     float dt = cur_time - g_last_time;
     update_game_state(&ship_obj, asteroids, &arena_obj, dt);
     move_asteroid(asteroids, dt, rounds);
+    for(int i = 0; i < rounds; i++)
+    {
+        rotate_asteroid(&asteroids[i], asteroids[i].turn_val, dt);
+    }
     g_last_time = cur_time;
     glutPostRedisplay();
 }

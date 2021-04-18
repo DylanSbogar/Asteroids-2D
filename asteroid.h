@@ -16,6 +16,8 @@
 struct asteroid {
     float outline_r,outline_g,outline_b; // Colour code for the asteroid.
     int starting_pos; // Starting point from the outer circle. (between 1 and 360).
+    float angle;
+    int turn_val;
     int size; // Size of the asteroid.
     vector2d pos; // Contains co-ordinates, angle and velocity.
     vector2d dir; // Unit vector containing direction of the asteroid.
